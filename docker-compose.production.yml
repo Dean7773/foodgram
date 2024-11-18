@@ -10,7 +10,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
   backend:
-    image: dean7773/foodgram-backend
+    image: dean7773/foodgram_backend
     depends_on:
       - db
     env_file: .env
@@ -19,12 +19,12 @@ services:
       - media:/app/media/
   frontend:
     container_name: foodgram-frontend
-    image: dean7773/foodgram-frontend
+    image: dean7773/foodgram_frontend
     volumes:
       - ./frontend/:/app/result_build/
   gateway:
     container_name: foodgram-gateway
-    image: dean7773/foodgram-gateway
+    image: dean7773/foodgram_gateway
     depends_on:
       - backend
       - frontend
