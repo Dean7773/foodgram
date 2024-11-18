@@ -3,10 +3,10 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
-
-from foodgram.utils import Base64ImageField
-from foodgram.models import Recipe
 from users.models import Subscriptions
+
+from foodgram.models import Recipe
+from foodgram.utils import Base64ImageField
 
 User = get_user_model()
 

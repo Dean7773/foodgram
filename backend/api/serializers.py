@@ -2,11 +2,11 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-
-from foodgram.models import (Recipe, Tag, Ingredient,
-                             Favorites, ShoppingList, RecipeIngredient)
-from foodgram.utils import Base64ImageField
 from users.serializers import UserInfoSerializer
+
+from foodgram.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
+                             ShoppingList, Tag)
+from foodgram.utils import Base64ImageField
 
 User = get_user_model()
 
@@ -44,7 +44,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     """Сериализатор для создания рецептов."""
     tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(),
                                               many=True)
-    ingredients = IngredientRecipeSerializer(many=True, source='recipeingredient')
+    ingredients = IngredientRecipeSerializer(many=True,
+                                             source='recipeingredient')
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
@@ -55,7 +56,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def validate_ingredients(self, value):
         """Проверка ингредиентов на корректность."""
         if not value:
-            raise serializers.ValidationError('Ингредиенты должны быть указаны.')
+            raise serializers.ValidationError('Не указаны ингредиенты.')
         for ingredient in value:
             if ingredient.get('amount') <= 0:
                 raise serializers.ValidationError(

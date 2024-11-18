@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from foodgram.models import Tag, Ingredient
+from foodgram.models import Ingredient, Tag
 
 
 @admin.register(Tag)
