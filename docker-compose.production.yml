@@ -10,7 +10,6 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
   backend:
-    container_name: foodgram-backend
     image: dean7773/foodgram-backend
     depends_on:
       - db
