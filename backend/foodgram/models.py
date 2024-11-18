@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 User = get_user_model()
@@ -7,6 +8,7 @@ User = get_user_model()
 class Ingredient(models.Model):
     """Модель ингредиентов, которые будут использоваться в рецептах."""
     name = models.CharField(max_length=50)
+    measurement_unit = models.CharField(max_length=20)
 
     class Meta:
         verbose_name = 'Ингредиент'
@@ -48,18 +50,22 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class RecipeIngredient(models.Model):
     """Промежуточная модель для связи ингредиентов и рецептов."""
-    """Добавляет поля количества и еденицы измерения ингредиента."""
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
-    unit = models.CharField(max_length=20)
+    amount = models.PositiveSmallIntegerField(
+        validators=[
+            MinValueValidator(1, 'Минимальное количество - 1'),
+            MaxValueValidator(10000, 'Максимальное количество - 10000')
+        ],
+    )
 
     class Meta:
+        default_related_name = 'recipeingredient'
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
 
@@ -68,14 +74,14 @@ class Favorites(models.Model):
     """Модель избранных рецептов."""
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='favorites')
-    favorites = models.ForeignKey(Recipe, on_delete=models.SET_NULL,
+    favorites = models.ForeignKey(Recipe, on_delete=models.CASCADE,
                                   null=True, related_name='favorites')
 
     class Meta:
         ordering = ['-id']
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
-        unique_together = ('user', 'favorites')
+        unique_together = (('user', 'favorites'),)
 
     def __str__(self):
         return self.favorites
@@ -84,8 +90,9 @@ class Favorites(models.Model):
 class ShoppingList(models.Model):
     """Модель списка покупок."""
     user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='shoppinglist')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True)
+                             related_name='carts')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
+                               related_name='carts')
 
     class Meta:
         ordering = ['-id']
@@ -94,4 +101,4 @@ class ShoppingList(models.Model):
 
     def __str__(self):
         return (f'{self.user.username} добавил '
-                f'рецепт {self.recipe.title} в список покупок.')
+                f'рецепт {self.recipe.name} в список покупок.')
