@@ -18,13 +18,13 @@ services:
       - static:/app/static/
       - media:/app/media/
   frontend:
-    container_name: foodgram-front
-    image: dean7773/foodgram-front
+    container_name: foodgram-frontend
+    image: dean7773/foodgram-frontend
     volumes:
       - ./frontend/:/app/result_build/
-  nginx:
-    container_name: foodgram-proxy
-    image: nginx:1.25.4-alpine
+  gateway:
+    container_name: foodgram-gateway
+    image: dean7773/foodgram-gateway
     depends_on:
       - backend
       - frontend
