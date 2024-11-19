@@ -10,7 +10,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
   backend:
-    image: dean7773/foodgram_backend
+    build: ./backend/
     depends_on:
       - db
     env_file: .env
@@ -19,7 +19,7 @@ services:
       - media:/app/media/
   frontend:
     container_name: foodgram-frontend
-    image: dean7773/foodgram_frontend
+    build: ./frontend/
     volumes:
       - ./frontend/:/app/result_build/
   gateway:
@@ -29,7 +29,7 @@ services:
       - backend
       - frontend
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - ./infra/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./frontend/build:/usr/share/nginx/html/
