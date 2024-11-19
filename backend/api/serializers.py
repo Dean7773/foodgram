@@ -26,6 +26,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
+    """Сериализатор для работы с ингредиентами в рецепте."""
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(),
         source='ingredient.id'
@@ -153,6 +154,7 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
 
 class FavoritesSerializer(serializers.ModelSerializer):
+    """Сериализатор для работы с избранным."""
     class Meta:
         model = Favorites
         fields = '__all__'
@@ -166,6 +168,7 @@ class FavoritesSerializer(serializers.ModelSerializer):
 
 
 class ShoppingListtSerializer(serializers.ModelSerializer):
+    """Сериализатор для работы со списком покупок."""
     class Meta:
         model = ShoppingList
         fields = '__all__'

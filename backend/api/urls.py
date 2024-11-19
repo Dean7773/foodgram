@@ -24,10 +24,8 @@ urlpatterns = [
     path('', include(v1_router.urls)),
     path('', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
-]
-
-urlpatterns += [
     path('users/me/avatar/', UserViewSet.as_view({'put': 'upload_avatar',
                                                   'delete': 'delete_avatar'
                                                   }), name='avatar'),
+
 ]

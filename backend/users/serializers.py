@@ -93,6 +93,7 @@ class UserSubscriptionsSerializer(UserSerializer):
 
 
 class UserAvatarSerializer(serializers.ModelSerializer):
+    """Сериализатор для загрузки аватара."""
     avatar = Base64ImageField(required=False, allow_null=True)
 
     class Meta:

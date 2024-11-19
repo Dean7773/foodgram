@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -7,7 +10,7 @@ User = get_user_model()
 
 class Ingredient(models.Model):
     """Модель ингредиентов, которые будут использоваться в рецептах."""
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     measurement_unit = models.CharField(max_length=20)
 
     class Meta:
@@ -43,11 +46,24 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(Tag, related_name='recipes', blank=True)
     cooking_time = models.PositiveSmallIntegerField()
     pub_date = models.DateTimeField('Дата создания рецепта', auto_now_add=True)
+    uniq_code = models.CharField(max_length=4, unique=True, blank=True)
 
     class Meta:
         ordering = ['-pub_date']
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
+
+    def generate_unique_code(self):
+        characters = string.ascii_letters + string.digits
+        while True:
+            code = ''.join(random.choices(characters, k=4))
+            if not Recipe.objects.filter(uniq_code=code).exists():
+                return code
+
+    def save(self, *args, **kwargs):
+        if not self.uniq_code:
+            self.uniq_code = self.generate_unique_code()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
