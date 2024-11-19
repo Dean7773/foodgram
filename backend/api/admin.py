@@ -50,7 +50,6 @@ class FavoritesAdmin(admin.ModelAdmin):
     ordering = ('user', 'favorites')
 
 
-
 @admin.register(ShoppingList)
 class ShoppingListAdmin(admin.ModelAdmin):
     """Раздел списка покупок в админке."""
