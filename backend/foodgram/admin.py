@@ -22,14 +22,23 @@ class IngredientAdmin(admin.ModelAdmin):
     search_fields = ('name', )
 
 
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    min_num = 1
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Раздел рецептов в админке."""
-    list_display = ('name', 'author', 'text',
+    list_display = ('name', 'author', 'text', 'count_is_favorite'
                     'cooking_time', 'pub_date', 'uniq_code')
     empty_value_display = 'значение отсутствует'
     list_filter = ('author', 'tags')
     search_fields = ('name',)
+    inlines = [RecipeIngredientInline, ]
+
+    def count_is_favorite(self, obj):
+        return obj.favorites.count()
 
 
 @admin.register(RecipeIngredient)
