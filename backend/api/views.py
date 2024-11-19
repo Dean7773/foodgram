@@ -65,7 +65,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=['put'],
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def upload_avatar(self, request):
         """Загрузить новый аватар пользователя."""
@@ -78,7 +78,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=['delete'],
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def delete_avatar(self, request):
         """Удалить аватар пользователя."""
@@ -94,7 +94,7 @@ class TagViewSet(viewsets.ModelViewSet):
     """Позволяет управлять тегами, доступными в системе."""
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
-    permission_classes = [AllowAny,]
+    permission_classes = [AllowAny, ]
     pagination_class = None
 
 
@@ -102,7 +102,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     """Обрабатывает действия над ингредиентами и позволяет фильтровать их. """
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
-    permission_classes = [AllowAny,]
+    permission_classes = [AllowAny, ]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
     pagination_class = None
@@ -113,7 +113,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """список рецептов, добавить, обновить или удалить рецепт,"""
     """а также для добавить в избранное и в список покупок."""
     queryset = Recipe.objects.all()
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     http_method_names = ['get', 'post', 'patch', 'delete']
@@ -127,7 +127,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=['post', 'delete'],
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def favorite(self, request, pk=None):
         """Добавление или удаление рецепта из избранного."""
@@ -148,7 +148,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=['post', 'delete'],
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def shopping_cart(self, request, pk=None):
         """Добавление или удаление рецепта из списка покупок."""
