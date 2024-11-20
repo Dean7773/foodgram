@@ -213,36 +213,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
         return data
 
-    # def validate_ingredients(self, value):
-    #     """Проверка ингредиентов на корректность."""
-    #     if not value:
-    #         raise serializers.ValidationError('Не указаны ингредиенты.')
-    #     ingredients_list = []
-    #     for ingredient in value:
-    #         if ingredient.get('amount') <= 0:
-    #             raise serializers.ValidationError(
-    #                 'Количество должно быть больше 0.'
-    #             )
-    #         ingredients_list.append(ingredient.get('ingredient')['id'])
-    #     if len(set(ingredients_list)) != len(ingredients_list):
-    #         raise serializers.ValidationError(
-    #             'Вы пытаетесь добавить в рецепт два одинаковых ингредиента'
-    #         )
-    #     return value
-
-    # def validate_tags(self, value):
-    #     """Проверка тегов на корректность."""
-    #     if not value:
-    #         raise serializers.ValidationError('Не указаны теги.')
-    #     tags_list = []
-    #     for tag in value:
-    #         tags_list.append(tag.id)
-    #     if len(set(tags_list)) != len(tags_list):
-    #         raise serializers.ValidationError(
-    #             'Вы пытаетесь добавить в рецепт два одинаковых тега'
-    #         )
-    #     return value
-
     @transaction.atomic
     def create(self, validated_data):
         """Создание нового рецепта."""
@@ -318,13 +288,6 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         return (request.user.is_authenticated
                 and ShoppingList.objects.filter(user=request.user,
                                                 recipe=obj).exists())
-
-
-class ShortRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для работы с краткой информацией о рецепте."""
-    class Meta:
-        model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class FavoritesSerializer(serializers.ModelSerializer):
