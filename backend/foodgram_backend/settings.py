@@ -133,12 +133,12 @@ DJOSER = {
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
     'SERIALIZERS': {
-        'user_create': 'users.serializers.UserSignUpSerializer',
-        'user': 'users.serializers.UserInfoSerializer',
-        'current_user': 'users.serializers.UserInfoSerializer',
+        'user_create': 'api.serializers.UserSignUpSerializer',
+        'user': 'api.serializers.UserInfoSerializer',
+        'current_user': 'api.serializers.UserInfoSerializer',
     },
     'PERMISSIONS': {
         'user_list': ['rest_framework.permissions.AllowAny'],
-        'user': ['rest_framework.permissions.AllowAny'],
+        'user': ['api.permissions.IsAuthenticatedOrAuthorOrReadOnly'],
     }
 }

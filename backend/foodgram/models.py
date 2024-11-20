@@ -109,6 +109,9 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
+    def __str__(self):
+        return self.name
+
     def generate_unique_code(self):
         characters = string.ascii_letters + string.digits
         while True:
@@ -121,9 +124,6 @@ class Recipe(models.Model):
         if not self.uniq_code:
             self.uniq_code = self.generate_unique_code()
         super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
 
 
 class RecipeIngredient(models.Model):
@@ -159,7 +159,7 @@ class RecipeIngredient(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.amount} {self.ingredient} в {self.recipe}'
+        return f'{self.amount} {self.ingredient.name} в {self.recipe.name}'
 
 
 class Favorites(models.Model):
@@ -187,7 +187,7 @@ class Favorites(models.Model):
         ]
 
     def __str__(self):
-        return self.favorites
+        return self.favorites.name
 
 
 class ShoppingList(models.Model):

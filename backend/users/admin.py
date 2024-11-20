@@ -21,11 +21,16 @@ class CustomUserAdmin(UserAdmin):
                 'first_name', 'last_name', 'avatar'
             )
         }),
+        ('Права доступа', {
+            'fields': ('is_active', 'is_staff')
+        }),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'avatar'),
+            'fields': (
+                'username', 'password1', 'password2',
+                'avatar', 'is_active', 'is_staff'),
         }),
     )
 
