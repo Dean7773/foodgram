@@ -7,6 +7,7 @@ from users.models import Subscriptions
 
 User = get_user_model()
 
+
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     """Раздел пользователей в админке."""
