@@ -1,27 +1,45 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from foodgram.constant import (MAX_EMAIL, MAX_USERNAME, MAX_PASSWORD_LENGHT,
+                               MAX_FIRST_NAME, MAX_LAST_NAME)
 from users.validators import validate_username
 
 
 class User(AbstractUser):
     """Кастомная модель пользователя."""
-    class Role(models.TextChoices):
-        USER = 'user', 'Пользователь'
-        ADMIN = 'admin', 'Администратор'
-
-    email = models.EmailField(max_length=250, unique=True,
-                              blank=False, null=False)
-    username = models.CharField(max_length=150, unique=True, blank=False,
-                                null=False, validators=[validate_username])
-    first_name = models.CharField(max_length=150, blank=False, null=False)
-    last_name = models.CharField(max_length=150, blank=False, null=False)
-    password = models.CharField(max_length=150, blank=False, null=False)
-    role = models.CharField(max_length=150, choices=Role.choices,
-                            default=Role.USER)
-    avatar = models.ImageField(upload_to='avatars/image', blank=True)
+    email = models.EmailField(
+        max_length=MAX_EMAIL,
+        unique=True,
+        verbose_name='эл.почта'
+    )
+    username = models.CharField(
+        max_length=MAX_USERNAME,
+        unique=True,
+        validators=[validate_username],
+        verbose_name='имя пользователя'
+    )
+    first_name = models.CharField(
+        max_length=MAX_FIRST_NAME,
+        verbose_name='имя'
+    )
+    last_name = models.CharField(
+        max_length=MAX_LAST_NAME,
+        verbose_name='фамилия'
+    )
+    password = models.CharField(
+        max_length=MAX_PASSWORD_LENGHT,
+        verbose_name='пароль'
+    )
+    avatar = models.ImageField(
+        upload_to='avatars/image', blank=True,
+        verbose_name='аватар'
+    )
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     class Meta:
-        ordering = ['id']
+        ordering = ['email']
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
@@ -31,10 +49,18 @@ class User(AbstractUser):
 
 class Subscriptions(models.Model):
     """Модель подписок."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='follower')
-    following = models.ForeignKey(User, on_delete=models.CASCADE,
-                                  related_name='following')
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='подписчик',
+        related_name='follower'
+    )
+    following = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='автор',
+        related_name='following'
+    )
 
     class Meta:
         constraints = [

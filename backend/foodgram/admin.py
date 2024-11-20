@@ -30,7 +30,7 @@ class RecipeIngredientInline(admin.TabularInline):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Раздел рецептов в админке."""
-    list_display = ('name', 'author', 'text', 'count_is_favorite'
+    list_display = ('name', 'author', 'text', 'count_is_favorite',
                     'cooking_time', 'pub_date', 'uniq_code')
     empty_value_display = 'значение отсутствует'
     list_filter = ('author', 'tags')
