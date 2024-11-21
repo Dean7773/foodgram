@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseAdmin
 from django.utils.html import format_html
 
 from users.models import Subscriptions
@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 @admin.register(User)
-class CustomUserAdmin(UserAdmin):
+class UserAdmin(BaseAdmin):
     """Раздел пользователей в админке."""
     list_display = ('pk', 'email', 'username', 'first_name',
                     'last_name', 'display_avatar')

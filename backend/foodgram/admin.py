@@ -37,6 +37,7 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     inlines = [RecipeIngredientInline, ]
 
+    @admin.display(description='количество добавлений в избранное')
     def count_is_favorite(self, obj):
         return obj.favorites.count()
 

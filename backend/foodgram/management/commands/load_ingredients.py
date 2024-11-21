@@ -17,7 +17,7 @@ class Command(BaseCommand):
                 f'Файл не найден: {file_path}')
             )
             return
-
+        ingredients_to_create = []
         with open(file_path, newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
@@ -27,16 +27,19 @@ class Command(BaseCommand):
                     )
                     continue
                 name, measurement_unit = row
-                # Создаем или обновляем ингредиент
-                ingredient, created = Ingredient.objects.get_or_create(
-                    name=name.strip(),
-                    measurement_unit=measurement_unit.strip()
+                ingredients_to_create.append(
+                    Ingredient(
+                        name=name.strip(),
+                        measurement_unit=measurement_unit.strip()
+                    )
                 )
-                if created:
+            if ingredients_to_create:
+                created_ingredients = Ingredient.objects.bulk_create(
+                    ingredients_to_create, ignore_conflicts=True
+                )
+
+                for ingredient in created_ingredients:
                     self.stdout.write(self.style.SUCCESS(
                         f'Ингредиент добавлен: {ingredient.name}')
                     )
-                else:
-                    self.stdout.write(self.style.WARNING(
-                        f'Ингредиент уже существует: {ingredient.name}')
-                    )
+            self.stdout.write(self.style.WARNING('Обработка завершена!'))

@@ -1,9 +1,9 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
-from foodgram.constant import (MAX_EMAIL, MAX_USERNAME, MAX_PASSWORD_LENGHT,
-                               MAX_FIRST_NAME, MAX_LAST_NAME)
-from users.validators import validate_username
+from users.constant import (MAX_EMAIL, MAX_USERNAME, MAX_PASSWORD_LENGHT,
+                            MAX_FIRST_NAME, MAX_LAST_NAME)
 
 
 class User(AbstractUser):
@@ -16,7 +16,7 @@ class User(AbstractUser):
     username = models.CharField(
         max_length=MAX_USERNAME,
         unique=True,
-        validators=[validate_username],
+        validators=(UnicodeUsernameValidator(), ),
         verbose_name='имя пользователя'
     )
     first_name = models.CharField(
@@ -36,10 +36,10 @@ class User(AbstractUser):
         verbose_name='аватар'
     )
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ('username', 'first_name', 'last_name')
 
     class Meta:
-        ordering = ['email']
+        ordering = ('email', )
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
@@ -65,7 +65,7 @@ class Subscriptions(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'following'],
+                fields=('user', 'following'),
                 name='unique_following'
             ),
             models.CheckConstraint(

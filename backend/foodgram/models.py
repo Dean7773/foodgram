@@ -22,11 +22,11 @@ class Ingredient(models.Model):
     )
 
     class Meta:
-        ordering = ['-name']
+        ordering = ('-name', )
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         constraints = [
-            models.UniqueConstraint(fields=['name', 'measurement_unit'],
+            models.UniqueConstraint(fields=('name', 'measurement_unit'),
                                     name='unique_name_measurement_unit')
         ]
 
@@ -48,7 +48,7 @@ class Tag(models.Model):
     )
 
     class Meta:
-        ordering = ['-name']
+        ordering = ('-name', )
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -87,9 +87,11 @@ class Recipe(models.Model):
         verbose_name='время приготовления',
         validators=[
             MinValueValidator(constant.MIN_COOKING_TIME,
-                              'Минимальное время приготовления - 1'),
+                              f'Минимальное время приготовления - '
+                              f'{constant.MIN_COOKING_TIME}'),
             MaxValueValidator(constant.MAX_COOKING_TIME,
-                              'Максимальное время приготовления - 32767')
+                              f'Максимальное время приготовления - '
+                              f'{constant.MAX_COOKING_TIME}')
         ],
     )
     pub_date = models.DateTimeField(
@@ -104,7 +106,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ['-pub_date']
+        ordering = ('-pub_date', )
         default_related_name = 'recipes'
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
@@ -142,24 +144,27 @@ class RecipeIngredient(models.Model):
         verbose_name='количество ингредиента',
         validators=[
             MinValueValidator(constant.MIN_AMOUNT_INGREDIENT,
-                              'Минимальное количество - 1'),
+                              f'Минимальное количество - '
+                              f'{constant.MIN_AMOUNT_INGREDIENT}'),
             MaxValueValidator(constant.MAX_AMOUNT_INGREDIENT,
-                              'Максимальное количество - 32767')
+                              'Максимальное количество - '
+                              f'{constant.MAX_AMOUNT_INGREDIENT}')
         ],
     )
 
     class Meta:
-        ordering = ['-recipe__pub_date']
+        ordering = ('-recipe__pub_date', )
         default_related_name = 'recipeingredient'
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
         constraints = [
-            models.UniqueConstraint(fields=['recipe', 'ingredient'],
+            models.UniqueConstraint(fields=('recipe', 'ingredient'),
                                     name='unique_recipe_ingredient')
         ]
 
     def __str__(self):
-        return f'{self.amount} {self.ingredient.name} в {self.recipe.name}'
+        return (f'{self.amount}{self.ingredient.measurement_unit} '
+                f'{self.ingredient.name} в {self.recipe.name}')
 
 
 class Favorites(models.Model):
@@ -177,12 +182,12 @@ class Favorites(models.Model):
     )
 
     class Meta:
-        ordering = ['-favorites__pub_date']
+        ordering = ('-favorites__pub_date', )
         default_related_name = 'favorites'
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
         constraints = [
-            models.UniqueConstraint(fields=['user', 'favorites'],
+            models.UniqueConstraint(fields=('user', 'favorites'),
                                     name='unique_user_favorite')
         ]
 
@@ -204,12 +209,12 @@ class ShoppingList(models.Model):
     )
 
     class Meta:
-        ordering = ['-recipe__pub_date']
+        ordering = ('-recipe__pub_date', )
         default_related_name = 'carts'
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Список покупок'
         constraints = [
-            models.UniqueConstraint(fields=['user', 'recipe'],
+            models.UniqueConstraint(fields=('user', 'recipe'),
                                     name='unique_user_recipe')
         ]
 
