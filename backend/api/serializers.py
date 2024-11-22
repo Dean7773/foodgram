@@ -25,9 +25,7 @@ class UserInfoSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if request.user.is_anonymous:
-            return False
-        return (request and obj.is_authenticated
+        return (request and request.user.is_authenticated
                 and Subscriptions.objects.filter(
                     user=request.user, following=obj
                 ).exists())
@@ -189,11 +187,12 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     def validate_image(self, value):
         # Проверка наличия поля image.
-        if value is None or value == '':
+        if not value:
             raise serializers.ValidationError('Отсутствует картинка.')
         return value
 
-    def ingredient_tag_instance(self, recipe, data):
+    @staticmethod
+    def ingredient_tag_instance(recipe, data):
         ingredient_instances = []
         for ingredient in data:
             ingredient_id = ingredient['ingredient']['id'].id

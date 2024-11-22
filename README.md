@@ -4,8 +4,8 @@
 
 ## Технологии
 * Python 3.9
-* Django 3.2
-* Django REST Framework 3.12
+* Django
+* Django REST Framework
 * Docker
 * Gunicorn
 * Nginx

@@ -35,6 +35,7 @@ class UserAdmin(BaseAdmin):
         }),
     )
 
+    @admin.display(description='аватарка')
     def display_avatar(self, obj):
         if obj.avatar:
             return format_html(

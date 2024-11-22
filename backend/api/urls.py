@@ -16,13 +16,7 @@ router.register('subscriptions', UserSubscriptionsViewSet,
 urlpatterns = [
     path('users/subscriptions/',
          UserSubscriptionsViewSet.as_view({'get': 'list'})),
-    path('users/<int:user_id>/subscribe/',
-         UserViewSet.as_view({'post': 'subscribe',
-                              'delete': 'unsubscribe'})),
     path('users/me/', UserViewSet.as_view({'get': 'me'})),
-    path('users/me/avatar/',
-         UserViewSet.as_view({'put': 'upload_avatar',
-                              'delete': 'delete_avatar'}), name='avatar'),
     path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
 ]
